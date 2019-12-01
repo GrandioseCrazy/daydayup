@@ -2,18 +2,16 @@ package leetCode;
 
 import java.util.concurrent.Semaphore;
 
-public class Test {
+public class Test extends TTTTT {
 
 
-    public static void main(String[] args) {
-        Semaphore semaphore = new Semaphore(5);
-
+    public static void main(String[] args)  {
+     Test t = new Test();
         try {
-            semaphore.acquire();
+            t.wait();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        semaphore.release();
+        System.out.println(t.getClass().getSuperclass().getName());
     }
 }
