@@ -1,4 +1,5 @@
 #Object
+![image](D:/Object.png)
 简介：Object类是所有类的父类，任何类都默认继承Object
 1.常用方法
 ## Clone()
@@ -14,12 +15,15 @@ Object类中的克隆方法就是浅拷贝，只是实现对象的引用的拷�
 一般接收的的参数A要与已知的参数B进行比较时建议写成：B.equals(A) 这样可以防止传过来的A是null的时候发生的空指针问题：A.equals(B).
 ### 怎样的俩个对象在调用这个方法后会返回true？
 Object类中的代码是<br>
-` public boolean equals(Object obj) {
+```
+public boolean equals(Object obj) {
                      return (this == obj);
-                 }`
+                 }
+```
 代码很明显，要俩个引用指向同一个对象才返回true。
 ### 这个方法在其他类中有重写吗？是怎样重写的呢？
-`public boolean equals(Object anObject) {
+```
+public boolean equals(Object anObject) {
          if (this == anObject) {
              return true;
          }
@@ -39,7 +43,8 @@ Object类中的代码是<br>
              }
          }
          return false;
-     }`
+     }
+ ```
 String类里重写了这个方法，不同String对象只要其字符相同也会返回true。每个类都可以根据自己的需要来对equals方法进行重写。当然如果一个类重写了equals方法，那么这个类一般也会重写hashCode方法。
 ## finalize()
 这个方法用于释放资源，由于JAVA的GC完全由JVM来进行，我们无法指定程序何时发生GC，我们只能显示的通知JVM要进行GC，所以finalize()这个方法什么时候调用是不确定的。
@@ -55,11 +60,11 @@ String类里重写了这个方法，不同String对象只要其字符相同也�
 返回对象的哈希码值，是个native方法，前面有说到重写equals()方法要重写HashCode()方法，在一些集合中有用HashCode来定位元素的位置，一般equals相等的俩个对象其HashCode的也是一样的，比如在HashMap中，但是当HashCode相同的对象，true;
 ###哪些类重写了？
 String类重写了HashCode
-`    public int hashCode() {
+```
+ public int hashCode() {
          int h = hash;
          if (h == 0 && value.length > 0) {
              char val[] = value;
- 
              for (int i = 0; i < value.length; i++) {
                  h = 31 * h + val[i];
              }
@@ -67,7 +72,7 @@ String类重写了HashCode
          }
          return h;
      }
-`
+```
 ## notify()
 该方法与wait()方法搭配使用，用来唤醒在该对象上等待的某个线程，必须在synchronized中使用。
 ## notifyAll()
@@ -76,9 +81,11 @@ String类重写了HashCode
 ###这个方法做了什么？
 让JVM找到本地的函数。
 ## toString()
-` public String toString() {
+```
+public String toString() {
          return getClass().getName() + "@" + Integer.toHexString(hashCode());
-     }`
+     }
+```
 对象名+@+HashCode的十六进制表示。
 ## wait()
 ### 消耗cpu吗？
@@ -91,4 +98,59 @@ String类重写了HashCode
 这个问题其实就是解释为什么wait()要在synchronized同步代码块中执行，在生产者消费者中，生产者：执行goods++;notify();消费者执行：if (goods <= 0) wailt();
 如果在消费者判断if(goods <= 0) 成立后准备执行wait()时，cpu时间片到了，生产者执行goods++;notify();然后消费者再获取时间片执行wait()导致唤醒的消息丢失。这就是lost wake up 问题。
 
+#Integer
 
+##toHexString()
+转16进制
+```
+  public static void main(String[] args){
+        System.out.println(Integer.toHexString(100)); // 64
+    }
+```
+转8进制
+```$xslt
+ public static void main(String[] args){
+        System.out.println(Integer.toOctalString(100)); // 144
+    }
+```
+转2进制
+```$xslt
+ public static void main(String[] args){
+        System.out.println(Integer.toBinaryString(100)); // 1100100
+    }
+```
+二进制最左边1取整其他全为零
+```$xslt
+    public static int highestOneBit(int i) {
+        // HD, Figure 3-1
+        i |= (i >>  1);
+        i |= (i >>  2);
+        i |= (i >>  4);
+        i |= (i >>  8);
+        i |= (i >> 16);
+        return i - (i >>> 1);
+    }
+```
+
+二进制最右边1取整其他全为0
+```$xslt
+    public static int lowestOneBit(int i) {
+        // HD, Section 2-1
+        return i & -i;
+    }
+```
+最高不为零位前面的零的个数
+```$xslt
+    public static int numberOfLeadingZeros(int i) {
+        // HD, Figure 5-6
+        if (i == 0)
+            return 32;
+        int n = 1;
+        if (i >>> 16 == 0) { n += 16; i <<= 16; }
+        if (i >>> 24 == 0) { n +=  8; i <<=  8; }
+        if (i >>> 28 == 0) { n +=  4; i <<=  4; }
+        if (i >>> 30 == 0) { n +=  2; i <<=  2; }
+        n -= i >>> 31;
+        return n;
+    }
+```
