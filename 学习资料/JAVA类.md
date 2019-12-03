@@ -100,6 +100,115 @@ public String toString() {
 
 #Integer
 
+##有个内部类叫：IntegerCache
+用来缓存一些Integer数值 从而不用创建，提升性能
+
+int low = -128;
+int high // 默认127  也可以手动设置 java.lang.Integer.IntegerCache.high 来定义 high 
+Integer cache[] 
+有个静态代码块 在类加载的时候把Integer的类型加载进cache中,默认是-128 ~ 127 
+如果在使用默认的范围的时候：
+```$xslt
+Integer i1 =  Integer.valueOf(127);
+Integer i2 =  Integer.valueOf(127);
+i1 == i2 true
+
+Integer i3 =  Integer.valueOf(128);
+Integer i4 =  Integer.valueOf(128);
+i3 == i4 false
+
+Integer i5 = 127;
+Integer i6 = 127;
+Integer i7 = 127;
+Integer i8 = 127;
+
+i5 == i6 true;
+i7 == i8 false;
+
+因为：
+    public static Integer valueOf(int i) {
+        if (i >= IntegerCache.low && i <= IntegerCache.high)
+            return IntegerCache.cache[i + (-IntegerCache.low)];
+        return new Integer(i);
+    }
+```
+
+###toString()
+```$xslt
+    public static String toString(int i) {
+        if (i == Integer.MIN_VALUE)
+            return "-2147483648";
+        int size = (i < 0) ? stringSize(-i) + 1 : stringSize(i);
+        char[] buf = new char[size];
+        getChars(i, size, buf);
+        return new String(buf, true);
+    }
+```
+###toUnsignedString()
+
+```$xslt
+public static String toUnsignedString(int i) {
+        return Long.toString(toUnsignedLong(i));
+    }
+```
+###toHexString()
+其实进制的转换都是通过toUnsignedString0来实现的
+```$xslt
+ public static String toHexString(int i) {
+        return toUnsignedString0(i, 4);
+    }
+```
+
+###进制转换formatUnsignedInt()
+```$xslt
+     static int formatUnsignedInt(int val, int shift, char[] buf, int offset, int len) {
+        int charPos = len;
+        int radix = 1 << shift;
+        int mask = radix - 1;
+        do {
+            buf[offset + --charPos] = Integer.digits[val & mask];
+            val >>>= shift;
+        } while (val != 0 && charPos > 0);
+
+        return charPos;
+    }
+```
+###getChars()
+```$xslt
+ static void getChars(int i, int index, char[] buf) {
+        int q, r;
+        int charPos = index;
+        char sign = 0;
+
+        if (i < 0) {
+            sign = '-';
+            i = -i;
+        }
+
+        // Generate two digits per iteration
+        while (i >= 65536) {
+            q = i / 100;
+        // really: r = i - (q * 100);
+            r = i - ((q << 6) + (q << 5) + (q << 2));
+            i = q;
+            buf [--charPos] = DigitOnes[r];
+            buf [--charPos] = DigitTens[r];
+        }
+
+        // Fall thru to fast mode for smaller numbers
+        // assert(i <= 65536, i);
+        for (;;) {
+            q = (i * 52429) >>> (16+3);
+            r = i - ((q << 3) + (q << 1));  // r = i-(q*10) ...
+            buf [--charPos] = digits [r];
+            i = q;
+            if (i == 0) break;
+        }
+        if (sign != 0) {
+            buf [--charPos] = sign;
+        }
+    }
+```
 ##toHexString()
 转16进制
 ```
