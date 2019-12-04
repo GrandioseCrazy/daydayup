@@ -263,3 +263,11 @@ public static String toUnsignedString(int i) {
         return n;
     }
 ```
+
+
+
+
+
+
+#String
+###readResolve() 保护单例模式 反序列化的时候通过反射调用这个方法获取

@@ -1,7 +1,6 @@
 package leetCode;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author:pengpeng
@@ -12,20 +11,10 @@ import java.util.Map;
  **/
 public class TTTTT {
     public static void main(String[] args) {
-//        int a = 0x00FF;
-//        int b = 0xF000F;
-//        System.out.println(a & b);
-//        System.out.println(Integer.toBinaryString(a));
-//
-//        int r = Integer.reverse(a);
-//        System.out.println(r);
-//        System.out.println(Integer.toBinaryString(r));
-//
-//        int rb = Integer.reverseBytes(a);
-//        System.out.println(Integer.toHexString(rb));
-        Integer i3 =  Integer.valueOf(127);
-        Integer i4 =  Integer.valueOf(127);
-        System.out.println(i3 == i4);
+        String str1 = "AAAAA";
+        String str2 = "AAAAA";
+        System.out.println(str1.indexOf(str2));
+
     }
     public static int minTimeToVisitAllPoints(int[][] arr) {
 
