@@ -1,6 +1,10 @@
 package leetCode;
 
-import java.util.*;
+
+import javax.xml.soap.Text;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * @Author:pengpeng
@@ -10,12 +14,26 @@ import java.util.*;
  * @Version:1.0
  **/
 public class TTTTT {
-    public static void main(String[] args) {
-        String str1 = "AAAAA";
-        String str2 = "AAAAA";
-        System.out.println(str1.indexOf(str2));
+    public static void main(String[] args) throws IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException, NoSuchFieldException {
+        Class<Person> personClass = Person.class;
+        Method get = personClass.getDeclaredMethod("get", null);
+        Field address = personClass.getDeclaredField("address");
+        address.setAccessible(true);
+        System.out.println(address.getName());
+        Person person = personClass.newInstance();
+        address.set(person,"aaaa");
+        System.out.println(address.get(person));
+
+//        System.out.println(address.getName());
+        get.setAccessible(true);
+        Object invoke = get.invoke(personClass.newInstance());
+
+        System.out.println((int)invoke);
+
 
     }
+
+
     public static int minTimeToVisitAllPoints(int[][] arr) {
 
         if (arr.length <= 1) {

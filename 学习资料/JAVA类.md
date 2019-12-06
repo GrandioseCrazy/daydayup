@@ -270,4 +270,30 @@ public static String toUnsignedString(int i) {
 
 
 #String
-###readResolve() 保护单例模式 反序列化的时候通过反射调用这个方法获取
+###readResolve() 
+保护单例模式 反序列化的时候通过反射调用这个方法获取一般再这个方法里返回之前生成的单例 从而起到保护作用
+```$xslt
+public Object readResolve() {
+    return Instance; // instance为单例
+}
+```
+###equals()
+
+
+
+
+
+#CLASS
+获取Class对象得三种方法
+1 object.getCLass()
+2 CLass.forName()
+3 类名.class
+
+###getDeclaredMethod()获取所有方法
+###getMethod()获取public方法
+###私有方法
+method.setAccessible(true);
+
+
+
+
